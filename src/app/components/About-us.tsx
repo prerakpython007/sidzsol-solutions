@@ -13,8 +13,8 @@ const About = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hasReachedEnd, setHasReachedEnd] = useState(false);
   const [hasEnteredAbout, setHasEnteredAbout] = useState(false);
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const overlayRef = useRef<HTMLElement | null>(null);
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
 
   const contentSets = [
     {
@@ -96,7 +96,6 @@ const About = () => {
 
   return (
     <>
-      {/* First Section */}
       <section
         ref={sectionRef}
         className="sticky top-0 h-screen bg-[#010003] flex items-center justify-center overflow-hidden z-10"
@@ -135,36 +134,59 @@ const About = () => {
         </div>
       </section>
 
-      {/* Overlay Section */}
       <section
         ref={overlayRef}
-        className="relative z-20 h-screen flex flex-col items-center justify-start bg-transparent px-4 transition-all duration-700"
+        className="relative z-20 h-auto min-h-screen flex flex-col items-center justify-start bg-black px-4 transition-all duration-700 pb-20"
         style={{
           transform: `translateY(${100 - scrollProgress * 100}%)`,
           opacity: scrollProgress,
         }}
       >
-        {/* Ticker */}
+        {/* Corner Angles - Moved inward and made sharper */}
+        <div className="absolute top-4 left-4 w-6 h-6 border-t-4 border-l-4 border-cyan-400 rounded-tl-xl"></div>
+        <div className="absolute top-4 right-4 w-6 h-6 border-t-4 border-r-4 border-cyan-400 rounded-tr-xl"></div>
+        <div className="absolute bottom-4 left-4 w-6 h-6 border-b-4 border-l-4 border-cyan-400 rounded-bl-xl"></div>
+        <div className="absolute bottom-4 right-4 w-6 h-6 border-b-4 border-r-4 border-cyan-400 rounded-br-xl"></div>
+
+        {/* Ticker - Thinner gradient */}
         <div className="w-full bg-[#0cf] text-black py-1 overflow-hidden whitespace-nowrap relative">
-          <div className="absolute top-0 left-0 h-full w-20 bg-gradient-to-r from-black to-transparent z-10"></div>
-          <div className="absolute top-0 right-0 h-full w-20 bg-gradient-to-l from-black to-transparent z-10"></div>
+          <div className="absolute top-0 left-0 h-full w-10 bg-gradient-to-r from-black/80 to-transparent z-10"></div>
+          <div className="absolute top-0 right-0 h-full w-10 bg-gradient-to-l from-black/80 to-transparent z-10"></div>
           <div className="animate-marquee text-white flex items-center space-x-10 px-10 text-sm font-medium">
-            <span className="text-xl">🚀</span>
+            <span className="text-xl">✦</span>
             <span className="uppercase">Empowering Digital Dreams</span>
-            <span className="text-xl">💡</span>
+            <span className="text-xl">✦</span>
             <span className="uppercase">Driven by Innovation</span>
-            <span className="text-xl">🌐</span>
+            <span className="text-xl">✦</span>
             <span className="uppercase">Building Future Experiences</span>
+            <span className="text-xl">✦</span>
+            <span className="uppercase">Design. Develop. Deliver.</span>
           </div>
         </div>
 
-        <div className="flex-1 flex items-center justify-center text-white">
-          <div className="max-w-2xl text-center">
-            <h2 className="text-4xl font-bold mb-6">Our Vision for the Future</h2>
+        {/* Additional Structured Content */}
+        <div className="flex-1 w-full max-w-5xl mt-10 text-white space-y-12 px-4 md:px-0">
+          <div className="text-center">
+            <h2 className="text-4xl font-bold mb-4">Our Vision for the Future</h2>
             <p className="text-lg text-gray-300">
               We envision a world where design and technology work in perfect harmony —
               empowering every business to thrive in the digital age.
             </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-10">
+            <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
+              <h3 className="text-2xl font-semibold mb-3">Innovation First</h3>
+              <p className="text-gray-400">We prioritize innovation by investing in cutting-edge tools and experimenting with new approaches.</p>
+            </div>
+            <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
+              <h3 className="text-2xl font-semibold mb-3">Client-Centered</h3>
+              <p className="text-gray-400">We build lasting relationships with our clients through transparency, empathy, and impactful results.</p>
+            </div>
+            <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
+              <h3 className="text-2xl font-semibold mb-3">Scalable Strategy</h3>
+              <p className="text-gray-400">Our strategies scale with your business — adaptable, resilient, and always aligned with your vision.</p>
+            </div>
           </div>
         </div>
 
