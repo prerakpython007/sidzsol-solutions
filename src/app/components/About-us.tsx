@@ -13,8 +13,8 @@ const About = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hasReachedEnd, setHasReachedEnd] = useState(false);
   const [hasEnteredAbout, setHasEnteredAbout] = useState(false);
-  const sectionRef = useRef(null);
-  const overlayRef = useRef(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const overlayRef = useRef<HTMLElement | null>(null);
 
   const contentSets = [
     {
@@ -138,7 +138,7 @@ const About = () => {
       {/* Overlay Section */}
       <section
         ref={overlayRef}
-        className="relative z-20 h-screen flex flex-col items-center justify-start bg-black px-4 transition-all duration-700"
+        className="relative z-20 h-screen flex flex-col items-center justify-start bg-transparent px-4 transition-all duration-700"
         style={{
           transform: `translateY(${100 - scrollProgress * 100}%)`,
           opacity: scrollProgress,
