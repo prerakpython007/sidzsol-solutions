@@ -337,7 +337,7 @@ const SimplifiedLanding: React.FC = () => {
             isLoading ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
-          <h1 className="loading-logo text-2xl md:text-3xl">REX DIGITAL</h1>
+          <h1 className="loading-logo text-2xl md:text-3xl">Loading Experience</h1>
           <div className="loading-bar-container">
             <div className="loading-bar" style={{ width: `${loadingProgress}%` }}></div>
           </div>
