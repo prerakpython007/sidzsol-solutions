@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import localFont from 'next/font/local';
 import OverlayParticles from './OverlayParticles';
+import Image from 'next/image';
 
 const playwriteHU = localFont({
   src: '../../fonts/Playwrite_HU/static/PlaywriteHU-Regular.ttf',
@@ -13,7 +14,6 @@ const About = () => {
   const [contentIndex, setContentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [fadeDirection, setFadeDirection] = useState<'up' | 'down' | null>(null);
-  const [scrollAccumulator, setScrollAccumulator] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hasEnteredAbout, setHasEnteredAbout] = useState(false);
 
@@ -43,7 +43,6 @@ const About = () => {
     },
   ];
 
-  // Observe if user entered the About section
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => setHasEnteredAbout(entry.isIntersecting),
@@ -53,7 +52,6 @@ const About = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Scroll wheel handler
   const handleWheel = useCallback(
     (event: WheelEvent) => {
       if (!hasEnteredAbout || isTransitioning) return;
@@ -64,39 +62,31 @@ const About = () => {
       const delta = Math.abs(event.deltaY);
       const scrollingDown = event.deltaY > 0;
 
-      setScrollAccumulator((prev) => {
-        const newAccum = prev + delta;
+      if (delta >= 100) {
+        if (
+          contentIndex === contentSets.length - 1 &&
+          scrollingDown &&
+          overlayRef.current
+        ) {
+          overlayRef.current.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          setFadeDirection(scrollingDown ? 'down' : 'up');
+          setIsTransitioning(true);
 
-        if (newAccum >= 300) {
-          if (
-            contentIndex === contentSets.length - 1 &&
-            scrollingDown &&
-            overlayRef.current
-          ) {
-            overlayRef.current.scrollIntoView({ behavior: 'smooth' });
-          } else {
-            setFadeDirection(scrollingDown ? 'down' : 'up');
-            setIsTransitioning(true);
+          setTimeout(() => {
+            setContentIndex((prevIndex) =>
+              scrollingDown
+                ? Math.min(prevIndex + 1, contentSets.length - 1)
+                : Math.max(prevIndex - 1, 0)
+            );
+          }, 100);
 
-            setTimeout(() => {
-              setContentIndex((prevIndex) => {
-                return scrollingDown
-                  ? Math.min(prevIndex + 1, contentSets.length - 1)
-                  : Math.max(prevIndex - 1, 0);
-              });
-            }, 100);
-
-            setTimeout(() => {
-              setIsTransitioning(false);
-              setFadeDirection(null);
-            }, 600);
-          }
-
-          return 0;
+          setTimeout(() => {
+            setIsTransitioning(false);
+            setFadeDirection(null);
+          }, 600);
         }
-
-        return newAccum;
-      });
+      }
     },
     [hasEnteredAbout, isTransitioning, contentIndex, contentSets.length]
   );
@@ -106,7 +96,6 @@ const About = () => {
     return () => window.removeEventListener('wheel', handleWheel);
   }, [handleWheel]);
 
-  // Smooth scroll tracking for overlay
   useEffect(() => {
     const onScroll = () => {
       if (!overlayRef.current) return;
@@ -177,7 +166,6 @@ const About = () => {
       >
         <OverlayParticles />
 
-        {/* Ticker Marquee */}
         <div className="w-full bg-[#0cf]/60 text-black sticky top-0 z-30 overflow-hidden">
           <div className="relative w-full whitespace-nowrap">
             <div className="animate-marquee text-white flex gap-10 text-sm py-1 px-6 font-medium uppercase">
@@ -193,7 +181,6 @@ const About = () => {
           </div>
         </div>
 
-        {/* Main Overlay Content */}
         <div className="relative max-w-7xl mx-auto px-4 mt-16 space-y-12 text-center">
           <h2 className="text-sm font-thin text-left mb-4">—— About Sidzsol Solutions</h2>
           <p className={`${playwriteHU.className} text-3xl leading-12 text-left text-gray-300`}>
@@ -204,11 +191,11 @@ const About = () => {
           <div className="flex flex-col lg:flex-row justify-between items-center gap-12 mt-16 text-left">
             <div className="space-y-10">
               <div className="flex justify-center gap-6">
-                <img src="/element1.jpg" alt="Element 1" className="w-64 h-64 rounded-lg object-cover shadow-md" />
-                <img src="/element2.jpg" alt="Element 2" className="w-64 h-64 rounded-lg object-cover shadow-md" />
+                <Image src="/element1.jpg" alt="Element 1" width={256} height={256} className="rounded-lg object-cover shadow-md" />
+                <Image src="/element2.jpg" alt="Element 2" width={256} height={256} className="rounded-lg object-cover shadow-md" />
               </div>
               <div className="flex justify-center">
-                <img src="/element3.jpg" alt="Element 3" className="w-64 h-64 rounded-lg object-cover shadow-md" />
+                <Image src="/element3.jpg" alt="Element 3" width={256} height={256} className="rounded-lg object-cover shadow-md" />
               </div>
             </div>
 
@@ -219,7 +206,7 @@ const About = () => {
               </p>
               <p>
                 Our team blends creative strategy with state-of-the-art technology, helping clients craft experiences that
-                not only engage but inspire. Whether it's product development, design systems, or digital transformation — we
+                not only engage but inspire. Whether it&apos;s product development, design systems, or digital transformation — we
                 build the future.
               </p>
             </div>
