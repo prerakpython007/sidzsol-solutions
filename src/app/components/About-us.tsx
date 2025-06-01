@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+'use client';
+
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import localFont from 'next/font/local';
+import OverlayParticles from './OverlayParticles';
 
 const playwriteHU = localFont({
   src: '../../fonts/Playwrite_HU/static/PlaywriteHU-Regular.ttf',
@@ -9,93 +12,119 @@ const playwriteHU = localFont({
 const About = () => {
   const [contentIndex, setContentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [fadeDirection, setFadeDirection] = useState<'up' | 'down' | null>(null);
   const [scrollAccumulator, setScrollAccumulator] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [hasReachedEnd, setHasReachedEnd] = useState(false);
   const [hasEnteredAbout, setHasEnteredAbout] = useState(false);
+
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
 
   const contentSets = [
     {
       heading: <>Driving Innovation Through <br /> Intelligent Solutions</>,
-      paragraph:
-        'We craft cutting-edge solutions that blend creativity and technology, pushing boundaries to create impactful, future-ready experiences.',
+      paragraph: 'We craft cutting-edge solutions that blend creativity and technology, pushing boundaries to create impactful, future-ready experiences.',
       buttonText: 'Discover More',
     },
     {
       heading: 'Our Mission',
-      paragraph:
-        'To empower businesses and individuals with innovative tools that transform ideas into reality, fostering a future driven by creativity.',
+      paragraph: 'To empower businesses and individuals with innovative tools that transform ideas into reality, fostering a future driven by creativity.',
       buttonText: 'Learn More',
     },
     {
       heading: 'Our Approach',
-      paragraph:
-        'We combine strategic thinking with advanced technology, delivering solutions that are both visionary and practical.',
+      paragraph: 'We combine strategic thinking with advanced technology, delivering solutions that are both visionary and practical.',
       buttonText: 'Explore Approach',
     },
     {
       heading: 'Our Impact',
-      paragraph:
-        'Our work redefines industries, creating lasting value through solutions that inspire and drive results.',
+      paragraph: 'Our work redefines industries, creating lasting value through solutions that inspire and drive results.',
       buttonText: 'See Impact',
     },
   ];
 
+  // Observe if user entered the About section
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setHasEnteredAbout(true);
-      },
+      ([entry]) => setHasEnteredAbout(entry.isIntersecting),
       { threshold: 0.5 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    const handleWheel = (event: WheelEvent) => {
-      if (!sectionRef.current || !hasEnteredAbout || isTransitioning) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const inView = rect.top <= window.innerHeight && rect.bottom >= 0;
-      if (!inView || hasReachedEnd) return;
+  // Scroll wheel handler
+  const handleWheel = useCallback(
+    (event: WheelEvent) => {
+      if (!hasEnteredAbout || isTransitioning) return;
 
-      setScrollAccumulator(prev => prev + Math.abs(event.deltaY));
-      if (scrollAccumulator < 300) return;
+      const rect = sectionRef.current?.getBoundingClientRect();
+      if (!rect || rect.bottom < 0 || rect.top > window.innerHeight) return;
 
-      setIsTransitioning(true);
-      setContentIndex(prev => {
-        const newIndex = event.deltaY > 0 ? Math.min(prev + 1, contentSets.length - 1) : Math.max(prev - 1, 0);
-        if (newIndex === contentSets.length - 1 && event.deltaY > 0) {
-          setHasReachedEnd(true);
+      const delta = Math.abs(event.deltaY);
+      const scrollingDown = event.deltaY > 0;
+
+      setScrollAccumulator((prev) => {
+        const newAccum = prev + delta;
+
+        if (newAccum >= 300) {
+          if (
+            contentIndex === contentSets.length - 1 &&
+            scrollingDown &&
+            overlayRef.current
+          ) {
+            overlayRef.current.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            setFadeDirection(scrollingDown ? 'down' : 'up');
+            setIsTransitioning(true);
+
+            setTimeout(() => {
+              setContentIndex((prevIndex) => {
+                return scrollingDown
+                  ? Math.min(prevIndex + 1, contentSets.length - 1)
+                  : Math.max(prevIndex - 1, 0);
+              });
+            }, 100);
+
+            setTimeout(() => {
+              setIsTransitioning(false);
+              setFadeDirection(null);
+            }, 600);
+          }
+
+          return 0;
         }
-        return newIndex;
-      });
-      setScrollAccumulator(0);
-      setTimeout(() => setIsTransitioning(false), 1000);
-    };
 
-    window.addEventListener('wheel', handleWheel);
-    return () => window.removeEventListener('wheel', handleWheel);
-  }, [isTransitioning, scrollAccumulator, contentIndex, hasEnteredAbout]);
+        return newAccum;
+      });
+    },
+    [hasEnteredAbout, isTransitioning, contentIndex, contentSets.length]
+  );
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (!overlayRef.current || !hasReachedEnd) return;
-      const offsetTop = overlayRef.current.offsetTop;
+    window.addEventListener('wheel', handleWheel, { passive: true });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [handleWheel]);
+
+  // Smooth scroll tracking for overlay
+  useEffect(() => {
+    const onScroll = () => {
+      if (!overlayRef.current) return;
+      const overlayTop = overlayRef.current.offsetTop;
       const scrollY = window.scrollY + window.innerHeight;
-      const progress = Math.min(1, Math.max(0, (scrollY - offsetTop + 100) / 500));
+      const progress = Math.min(1, Math.max(0, (scrollY - overlayTop + 100) / 600));
       setScrollProgress(progress);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [hasReachedEnd]);
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const currentContent = contentSets[contentIndex];
 
   return (
     <>
+      {/* Hero Section */}
       <section
         ref={sectionRef}
         className="sticky top-0 h-screen bg-[#010003] flex items-center justify-center overflow-hidden z-10"
@@ -117,8 +146,10 @@ const About = () => {
         <div className="relative z-10 container px-4 text-center md:text-left">
           <div
             key={contentIndex}
-            className={`transition-all duration-700 ${
-              isTransitioning ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
+            className={`transition-all duration-700 ease-in-out ${
+              fadeDirection
+                ? 'opacity-0 translate-y-6'
+                : 'opacity-100 translate-y-0'
             } flex flex-col items-center md:items-start`}
           >
             <h1 className={`${playwriteHU.className} text-5xl md:text-7xl font-bold text-white mb-6`}>
@@ -134,71 +165,78 @@ const About = () => {
         </div>
       </section>
 
+      {/* Overlay Section */}
       <section
         ref={overlayRef}
-        className="relative z-20 h-auto min-h-screen flex flex-col items-center justify-start bg-black px-4 transition-all duration-700 pb-20"
+        className="relative z-20 min-h-screen w-full bg-black text-white pb-20 transition-transform duration-500 ease-out"
         style={{
           transform: `translateY(${100 - scrollProgress * 100}%)`,
           opacity: scrollProgress,
+          willChange: 'transform, opacity',
         }}
       >
-        {/* Corner Angles - Moved inward and made sharper */}
-        <div className="absolute top-4 left-4 w-6 h-6 border-t-4 border-l-4 border-cyan-400 rounded-tl-xl"></div>
-        <div className="absolute top-4 right-4 w-6 h-6 border-t-4 border-r-4 border-cyan-400 rounded-tr-xl"></div>
-        <div className="absolute bottom-4 left-4 w-6 h-6 border-b-4 border-l-4 border-cyan-400 rounded-bl-xl"></div>
-        <div className="absolute bottom-4 right-4 w-6 h-6 border-b-4 border-r-4 border-cyan-400 rounded-br-xl"></div>
+        <OverlayParticles />
 
-        {/* Ticker - Thinner gradient */}
-        <div className="w-full bg-[#0cf] text-black py-1 overflow-hidden whitespace-nowrap relative">
-          <div className="absolute top-0 left-0 h-full w-10 bg-gradient-to-r from-black/80 to-transparent z-10"></div>
-          <div className="absolute top-0 right-0 h-full w-10 bg-gradient-to-l from-black/80 to-transparent z-10"></div>
-          <div className="animate-marquee text-white flex items-center space-x-10 px-10 text-sm font-medium">
-            <span className="text-xl">✦</span>
-            <span className="uppercase">Empowering Digital Dreams</span>
-            <span className="text-xl">✦</span>
-            <span className="uppercase">Driven by Innovation</span>
-            <span className="text-xl">✦</span>
-            <span className="uppercase">Building Future Experiences</span>
-            <span className="text-xl">✦</span>
-            <span className="uppercase">Design. Develop. Deliver.</span>
+        {/* Ticker Marquee */}
+        <div className="w-full bg-[#0cf]/60 text-black sticky top-0 z-30 overflow-hidden">
+          <div className="relative w-full whitespace-nowrap">
+            <div className="animate-marquee text-white flex gap-10 text-sm py-1 px-6 font-medium uppercase">
+              <span className="text-xl">✦</span>
+              <span className="my-1">Empowering Digital Dreams</span>
+              <span className="text-xl">✦</span>
+              <span className="my-1">Driven by Innovation</span>
+              <span className="text-xl">✦</span>
+              <span className="my-1">Building Future Experiences</span>
+              <span className="text-xl">✦</span>
+              <span className="my-1">Design. Develop. Deliver.</span>
+            </div>
           </div>
         </div>
 
-        {/* Additional Structured Content */}
-        <div className="flex-1 w-full max-w-5xl mt-10 text-white space-y-12 px-4 md:px-0">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold mb-4">Our Vision for the Future</h2>
-            <p className="text-lg text-gray-300">
-              We envision a world where design and technology work in perfect harmony —
-              empowering every business to thrive in the digital age.
-            </p>
-          </div>
+        {/* Main Overlay Content */}
+        <div className="relative max-w-7xl mx-auto px-4 mt-16 space-y-12 text-center">
+          <h2 className="text-sm font-thin text-left mb-4">—— About Sidzsol Solutions</h2>
+          <p className={`${playwriteHU.className} text-3xl leading-12 text-left text-gray-300`}>
+            Turning ideas into <span className="text-[#0cf] font-semibold">reality</span><br />
+            through design and technology.
+          </p>
 
-          <div className="grid md:grid-cols-3 gap-10">
-            <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
-              <h3 className="text-2xl font-semibold mb-3">Innovation First</h3>
-              <p className="text-gray-400">We prioritize innovation by investing in cutting-edge tools and experimenting with new approaches.</p>
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-12 mt-16 text-left">
+            <div className="space-y-10">
+              <div className="flex justify-center gap-6">
+                <img src="/element1.jpg" alt="Element 1" className="w-64 h-64 rounded-lg object-cover shadow-md" />
+                <img src="/element2.jpg" alt="Element 2" className="w-64 h-64 rounded-lg object-cover shadow-md" />
+              </div>
+              <div className="flex justify-center">
+                <img src="/element3.jpg" alt="Element 3" className="w-64 h-64 rounded-lg object-cover shadow-md" />
+              </div>
             </div>
-            <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
-              <h3 className="text-2xl font-semibold mb-3">Client-Centered</h3>
-              <p className="text-gray-400">We build lasting relationships with our clients through transparency, empathy, and impactful results.</p>
-            </div>
-            <div className="bg-gray-900 p-6 rounded-xl border border-gray-700">
-              <h3 className="text-2xl font-semibold mb-3">Scalable Strategy</h3>
-              <p className="text-gray-400">Our strategies scale with your business — adaptable, resilient, and always aligned with your vision.</p>
+
+            <div className="max-w-xl text-xl leading-8 text-gray-300">
+              <p className="mb-6">
+                Sidzsol Solutions is a dynamic tech startup dedicated to transforming ideas into scalable digital products.
+                We harness the power of innovation to drive businesses forward in the ever-evolving digital landscape.
+              </p>
+              <p>
+                Our team blends creative strategy with state-of-the-art technology, helping clients craft experiences that
+                not only engage but inspire. Whether it's product development, design systems, or digital transformation — we
+                build the future.
+              </p>
             </div>
           </div>
         </div>
 
         <style jsx>{`
           .animate-marquee {
-            display: inline-block;
-            white-space: nowrap;
             animation: marquee 20s linear infinite;
           }
           @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+            0% {
+              transform: translateX(100%);
+            }
+            100% {
+              transform: translateX(-100%);
+            }
           }
         `}</style>
       </section>
