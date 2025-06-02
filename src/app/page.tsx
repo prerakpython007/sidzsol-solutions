@@ -2,16 +2,25 @@
 
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
+import { playwriteHU } from "@/lib/fonts"
 import About from "./components/About-us"
+import { X } from "lucide-react"
+import Navbar from "./components/Navbar"
+import TestimonialSection from "./components/Testimonials"
 
 const SimplifiedLanding: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [showLanding, setShowLanding] = useState<boolean>(false)
+  const [showLanding, setShowLanading] = useState<boolean>(false)
   const [loadingProgress, setLoadingProgress] = useState<number>(0)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isMobile, setIsMobile] = useState<boolean>(false)
+    const [realtimeText, setRealtimeText] = useState<string>("")
   const [scrollPosition, setScrollPosition] = useState(0)
   const titleRef = useRef<HTMLHeadingElement>(null)
+
+
+
+
 
   // Track mouse position for cursor effects
   useEffect(() => {
@@ -47,6 +56,44 @@ const SimplifiedLanding: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+    useEffect(() => {
+    if (isLoading) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = ""
+    }
+    return () => {
+      document.body.style.overflow = ""
+    }
+  }, [isLoading])
+
+
+useEffect(() => {
+  const formatDateWithSuffix = (date: Date) => {
+    const day = date.getDate()
+    const suffix = (d => {
+      if (d > 3 && d < 21) return 'th'
+      switch (d % 10) {
+        case 1: return 'st'
+        case 2: return 'nd'
+        case 3: return 'rd'
+        default: return 'th'
+      }
+    })(day)
+
+    const month = date.toLocaleString('default', { month: 'long' })
+    const year = date.getFullYear()
+
+    return `${day}${suffix} of ${month} ${year}`
+  }
+
+  const now = new Date()
+  setRealtimeText(formatDateWithSuffix(now))
+}, [])
+
+
+
+
   // Handle loading sequence with progress
   useEffect(() => {
     const progressInterval = setInterval(() => {
@@ -64,7 +111,7 @@ const SimplifiedLanding: React.FC = () => {
       setTimeout(() => {
         setIsLoading(false)
         setTimeout(() => {
-          setShowLanding(true)
+          setShowLanading(true)
         }, 200)
       }, 800)
     }, 2500)
@@ -77,14 +124,19 @@ const SimplifiedLanding: React.FC = () => {
 
   return (
     <>
+
+          {/* <TestimonialSection/> */}
       <style jsx>{`
         /* Import Premium Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap');
         
+        
+
         /* Custom cursor */
         * {
           cursor: none;
         }
+
         
         .custom-cursor {
           position: fixed;
@@ -146,7 +198,7 @@ const SimplifiedLanding: React.FC = () => {
           top: 0;
           left: 0;
           height: 100%;
-          background: blue;
+          background: #0cf;
           transition: width 0.3s ease-out;
         }
         
@@ -311,6 +363,7 @@ const SimplifiedLanding: React.FC = () => {
       `}</style>
 
       <div className="m-0 p-0 font-exo">
+        <Navbar/>
         {/* Custom Cursor - Desktop Only */}
         {!isMobile && (
           <>
@@ -333,7 +386,7 @@ const SimplifiedLanding: React.FC = () => {
 
         {/* Minimal Loading Screen */}
         <div
-          className={`loading-container transition-opacity duration-500 ease-out ${
+          className={`loading-container p-0 m-0 transition-opacity duration-500 ease-out ${
             isLoading ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
@@ -345,11 +398,11 @@ const SimplifiedLanding: React.FC = () => {
         </div>
 
         {/* Landing Page Section */}
-        <div className="border-black h-screen border-8 relative overflow-hidden">
+        <div className=" h-screen relative overflow-hidden">
           {/* Web Designs Text at Top Center */}
-          <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-20">
+          {/* <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-20">
             <h2 className="cursive-font bg-black px-2 rounded-full text-blue-200 text-lg md:text-xl lg:text-2xl">Web Designs</h2>
-          </div>
+          </div> */}
 
           {/* Corner Angles */}
           <div className="corner-angle corner-angle-tl"></div>
@@ -359,7 +412,7 @@ const SimplifiedLanding: React.FC = () => {
 
           {/* Main Landing Page */}
           <div
-            className={`relative w-full h-screen flex justify-center items-center transition-all duration-1000 ease-in ${
+            className={`relative w-full h-screen flex justify-center items-center  transition-all duration-1000 ease-in ${
               showLanding ? "opacity-100 scale-100" : "opacity-0 scale-105"
             }`}
           >
@@ -371,7 +424,7 @@ const SimplifiedLanding: React.FC = () => {
               }}
             >
               <video
-                className="video-container"
+                className="video-container "
                 autoPlay
                 muted
                 loop
@@ -388,7 +441,7 @@ const SimplifiedLanding: React.FC = () => {
             </div>
 
             {/* Hero Content */}
-            <div className="text-center text-white z-10 max-w-6xl px-4 sm:px-6 md:px-8">
+            <div className="text-center text-white z-10  max-w-6xl px-4 sm:px-6 md:px-8">
               {/* Welcome Text */}
               <div className="text-base sm:text-lg md:text-xl lg:text-2xl font-light text-white/80 mb-8 sm:mb-12 tracking-[0.2em] animate-text-float font-exo interactive-element">
                 Welcome to
@@ -420,11 +473,28 @@ const SimplifiedLanding: React.FC = () => {
               <div className="text-sm sm:text-base md:text-lg lg:text-xl font-medium text-blue-300 tracking-[1px] sm:tracking-[2px] uppercase border-2 border-blue-500 py-3 sm:py-4 px-6 sm:px-8 rounded-full inline-block backdrop-blur-sm bg-blue-500/10 transition-all duration-300 hover:bg-blue-500/20 hover:-translate-y-1 cursor-pointer font-exo">
                 Crafting Digital Excellence
               </div>
+              {/* Realtime text below slogan aligned to the left */}
+<div className="flex items-center justify-between w-full mt-4 sm:mt-6 px-4 sm:px-6">
+  {/* Left-side real-time text */}
+  <div className={`text-xs sm:text-sm text-white/70 ${playwriteHU.className}`}>
+    {realtimeText}
+  </div>
+
+  {/* Line and X on the right */}
+  <div className="flex-1 flex items-center ml-4">
+    <div className="border-t border-white/30 w-full" />
+    <span className="ml-3 text-white/70 text-lg sm:text-xl font-light"><X/></span>
+  </div>
+</div>
+
+
             </div>
           </div>
         </div>
       </div>
+      
       <About/>
+            <TestimonialSection/>
     </>
   )
 }
