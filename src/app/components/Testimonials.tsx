@@ -19,7 +19,7 @@ const duplicated = [...testimonials, ...testimonials, ...testimonials]; // exten
 const TestimonialScroller = () => {
   return (
     <div className="relative overflow-hidden z-10 bg-black text-white px-4 py-12">
-      <h2 className="text-center text-2xl md:text-4xl font-semibold mb-8">
+      <h2 className="text-center font-extralight text-3xl md:text-4xl  mb-8">
         What Our Clients Say
       </h2>
 
