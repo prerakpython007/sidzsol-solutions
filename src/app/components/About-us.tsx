@@ -21,7 +21,7 @@ const contentSets = [
   {
     heading: 'Our Approach',
     paragraph:
-      "We combine strategic thinking with advanced technology, delivering solutions that are both visionary and practical, tailored to each client's unique needs.",
+      "We combine strategic thinking with advanced technology, delivering solutions that are both visionary and practical, tailored to each client’s unique needs.",
     buttonText: 'Explore Approach',
   },
   {
@@ -34,7 +34,8 @@ const contentSets = [
 
 const About = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const floatingRefs = [useRef<HTMLImageElement>(null), useRef<HTMLImageElement>(null)];
+  const floatingRef1 = useRef<HTMLDivElement>(null);
+  const floatingRef2 = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -43,18 +44,14 @@ const About = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Cursor attraction effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      floatingRefs.forEach((ref) => {
-        const el = ref.current;
+      [floatingRef1.current, floatingRef2.current].forEach((el) => {
         if (!el) return;
-
         const rect = el.getBoundingClientRect();
         const dx = e.clientX - (rect.left + rect.width / 2);
         const dy = e.clientY - (rect.top + rect.height / 2);
         const distance = Math.sqrt(dx * dx + dy * dy);
-
         const maxDist = 200;
         if (distance < maxDist) {
           el.style.transform = `translate(${dx * 0.1}px, ${dy * 0.1}px)`;
@@ -66,7 +63,7 @@ const About = () => {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, []); // Refs don't need to be in dependency array
 
   return (
     <div className="relative">
@@ -89,39 +86,19 @@ const About = () => {
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
         </div>
 
-        {/* Floating elements over cards */}
-        <img
-          ref={floatingRefs[0]}
-          src="/about-element1.png"
-          alt="Floating 1"
-          style={{
-            position: 'absolute',
-            top: '20%',
-            left: '30%',
-            width: '100px',
-            height: '100px',
-            transition: 'transform 0.2s ease-out',
-            zIndex: 30,
-            pointerEvents: 'none',
-            opacity: 0.8,
-          }}
-        />
-        <img
-          ref={floatingRefs[1]}
-          src="/about-element2.png"
-          alt="Floating 2"
-          style={{
-            position: 'absolute',
-            top: '60%',
-            left: '10%',
-            width: '100px',
-            height: '100px',
-            transition: 'transform 0.2s ease-out',
-            zIndex: 30,
-            pointerEvents: 'none',
-            opacity: 0.8,
-          }}
-        />
+        {/* Floating elements using Image */}
+        <div
+          ref={floatingRef1}
+          className="absolute top-[20%] left-[30%] w-[100px] h-[100px] z-30 pointer-events-none opacity-80 transition-transform duration-200 ease-out"
+        >
+          <Image src="/about-element1.png" alt="Floating 1" fill className="object-contain" />
+        </div>
+        <div
+          ref={floatingRef2}
+          className="absolute top-[60%] left-[10%] w-[100px] h-[100px] z-30 pointer-events-none opacity-80 transition-transform duration-200 ease-out"
+        >
+          <Image src="/about-element2.png" alt="Floating 2" fill className="object-contain" />
+        </div>
 
         {/* Cards Grid on Left */}
         <div className="relative z-10 container px-4 md:px-6 mx-auto h-screen flex items-center">
@@ -150,7 +127,6 @@ const About = () => {
       {/* Overlay Section */}
       <section className="relative w-full bg-black text-white z-20">
         <OverlayParticles />
-
         <div className="relative max-w-7xl mx-auto px-4 py-16 space-y-12">
           <h2 className="text-sm font-thin text-left mb-4">—— About Sidzsol Solutions</h2>
           <p className={`${playwriteHU.className} text-3xl leading-12 text-left text-gray-300`}>
@@ -196,7 +172,7 @@ const About = () => {
               </p>
               <p>
                 Our team blends creative strategy with state-of-the-art technology, helping clients craft experiences
-                that not only engage but inspire. Whether it's product development, design systems, or digital
+                that not only engage but inspire. Whether it’s product development, design systems, or digital
                 transformation — we build the future.
               </p>
             </div>

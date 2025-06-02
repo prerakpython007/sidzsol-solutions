@@ -1,6 +1,7 @@
-"use client";
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+'use client';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image'; // ✅ import Image
 
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
@@ -13,8 +14,8 @@ const Navbar = () => {
       setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
 
   return (
@@ -28,7 +29,7 @@ const Navbar = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
+              transition={{ duration: 0.5, ease: 'easeInOut' }}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
             >
               <motion.div
@@ -42,7 +43,14 @@ const Navbar = () => {
                   transition={{ duration: 0.5 }}
                   className="text-base sm:text-xl font-bold"
                 >
-                  <img src="/logo.png" className="w-8 sm:w-10 h-8 sm:h-10 rounded-full" alt="Logo" />
+                  <Image
+                    src="/logo.png"
+                    alt="Logo"
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                    priority
+                  />
                 </motion.div>
                 <motion.div
                   initial={{ x: 50, opacity: 0 }}
@@ -76,16 +84,23 @@ const Navbar = () => {
                 transition={{ duration: 0.5 }}
                 className="text-base sm:text-xl font-bold"
               >
-                <img src="/logo.png" className="w-10 sm:w-10 h-10 sm:h-10 rounded-full" alt="Logo" />
+                <Image
+                  src="/logo.png"
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                  priority
+                />
               </motion.div>
               <motion.div
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: 50, opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="flex flex-wrap gap-2  sm:gap-4 items-center  sm:text-base"
+                className="flex flex-wrap gap-2 sm:gap-4 items-center sm:text-base"
               >
-                {["About", "Services", "Contact"].map((text) => (
+                {['About', 'Services', 'Contact'].map((text) => (
                   <a
                     key={text}
                     href={`#${text.toLowerCase()}`}
