@@ -4,34 +4,35 @@ import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { playwriteHU } from "@/lib/fonts"
 import About from "./components/About-us"
-import { X } from "lucide-react"
+import {  X } from "lucide-react"
 import Navbar from "./components/Navbar"
 import TestimonialSection from "./components/Testimonials"
 import ProjectGallery from "./components/Projects"
+import Contact from "./components/Contact"
 
 const SimplifiedLanding: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [showLanding, setShowLanading] = useState<boolean>(false)
   const [loadingProgress, setLoadingProgress] = useState<number>(0)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  // const [ setMousePosition] = useState({ x: 0, y: 0 })
   const [isMobile, setIsMobile] = useState<boolean>(false)
     const [realtimeText, setRealtimeText] = useState<string>("")
   const [scrollPosition, setScrollPosition] = useState(0)
-  const titleRef = useRef<HTMLHeadingElement>(null)
+  // const titleRef = useRef<HTMLHeadingElement>(null)
 
 
 
 
 
   // Track mouse position for cursor effects
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-    }
+  // useEffect(() => {
+  //   const handleMouseMove = (e: MouseEvent) => {
+  //     setMousePosition({ x: e.clientX, y: e.clientY })
+  //   }
 
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
-  }, [])
+  //   window.addEventListener("mousemove", handleMouseMove)
+  //   return () => window.removeEventListener("mousemove", handleMouseMove)
+  // }, [])
 
   // Mobile detection
   useEffect(() => {
@@ -482,6 +483,7 @@ useEffect(() => {
       <About/>
             <TestimonialSection/>
             <ProjectGallery/>
+            <Contact/>
     </>
   )
 }

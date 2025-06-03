@@ -1,7 +1,8 @@
-'use client';
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
+"use client";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import { LucideArrowUpRight } from "lucide-react";
 
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
@@ -12,8 +13,8 @@ const Navbar = () => {
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -23,8 +24,8 @@ const Navbar = () => {
       setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
   return (
@@ -38,12 +39,12 @@ const Navbar = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: 'easeInOut' }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
             >
               <motion.div
                 layout
-                className="flex items-center gap-4 sm:gap-6 px-4 sm:px-6 sm:py-3 rounded-full backdrop-blur-md bg-white/5 shadow-md"
+                className="flex items-center gap-4 sm:gap-6 px-4 sm:px-6 sm:py-3 rounded-full backdrop-blur-sm bg-white/5 shadow-md"
               >
                 <Image
                   src="/logo.png"
@@ -53,8 +54,8 @@ const Navbar = () => {
                   className="rounded-full"
                   priority
                 />
-                <div className="text-sm sm:text-base cursor-pointer text-white hover:text-[#B7FBFF] transition">
-                  About
+                <div className="text-sm sm:text-base cursor-pointer bg-[#B7FBFF] gap-3 py-3 flex rounded-full px-3 group   text-black border-[1px] duration-300 hover:text-white  hover:border-white hover:bg-[#8F71FF] border-[#B7FBFF] hover:shadow-[#B7FBFF] hover:shadow-sm/50 transition">
+                  About <LucideArrowUpRight className="bg-[#8F71FF] text-white group-hover:bg-white group-hover:text-[#8F71FF] rounded-full"/>
                 </div>
               </motion.div>
             </motion.div>
@@ -77,13 +78,13 @@ const Navbar = () => {
                 alt="Logo"
                 width={40}
                 height={40}
-                className="rounded-full"
+                className="rounded-xl transition-all duration-300 gradient-shadow"
                 priority
               />
 
               {/* Desktop Nav */}
               <div className="hidden md:flex gap-4">
-                {['About', 'Services', 'Contact'].map((text) => (
+                {["About", "Services", "Contact"].map((text) => (
                   <a
                     key={text}
                     href={`#${text.toLowerCase()}`}
@@ -100,7 +101,7 @@ const Navbar = () => {
                 className="md:hidden text-white text-3xl"
                 aria-label="Toggle Menu"
               >
-                {menuOpen ? '✕' : '☰'}
+                {menuOpen ? "✕" : "☰"}
               </button>
             </motion.div>
           )}
@@ -116,7 +117,7 @@ const Navbar = () => {
               transition={{ duration: 0.3 }}
               className="md:hidden mt-3 bg-black/80 backdrop-blur-md rounded-lg p-4 absolute right-4 top-[72px] w-44"
             >
-              {['About', 'Services', 'Contact'].map((text) => (
+              {["About", "Services", "Contact"].map((text) => (
                 <a
                   key={text}
                   href={`#${text.toLowerCase()}`}

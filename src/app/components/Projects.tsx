@@ -67,7 +67,27 @@ const ProjectGallery = () => {
 
       {/* Decorative parallax images */}
       <div className="absolute w-full h-full top-0 left-0 z-50 overflow-hidden pointer-events-none">
-      <Image
+      <img
+  src="/project-element1.png"
+  alt="element1"
+  width={100}
+  // quality={100}
+  height={100}
+  className="absolute left-[2%] sm:left-[6%] top-[75%] w-28 sm:w-44 md:w-52  opacity-70 rotate-12 transition-transform duration-300 ease-out"
+  style={leftStyle}
+/>
+
+
+<img
+  src="/project-element2.png"
+  alt="element2"
+  width={100}
+
+  height={100}
+  className="absolute right-[2%] sm:right-[7%] top-[10%] w-28 sm:w-44 md:w-52 lg:w-64 opacity-70 -rotate-6 transition-transform duration-300 ease-out"
+  style={rightStyle}
+/>
+ {/* <Image
   src="/project-element1.png"
   alt="element1"
   width={100}
@@ -83,24 +103,7 @@ const ProjectGallery = () => {
   height={100}
   className="absolute right-[2%] sm:right-[7%] top-[10%] w-28 sm:w-44 md:w-52 lg:w-64 opacity-60 -rotate-6 transition-transform duration-300 ease-out"
   style={rightStyle}
-/>
- <Image
-  src="/project-element1.png"
-  alt="element1"
-  width={100}
-  height={100}
-  className="absolute left-[2%] sm:left-[0%] top-[75%] w-28 sm:w-44 md:w-52 lg:w-64 opacity-70 rotate-12 transition-transform duration-300 ease-out"
-  style={leftStyle}
-/>
-
-<Image
-  src="/project-element2.png"
-  alt="element2"
-  width={100}
-  height={100}
-  className="absolute right-[2%] sm:right-[7%] top-[10%] w-28 sm:w-44 md:w-52 lg:w-64 opacity-60 -rotate-6 transition-transform duration-300 ease-out"
-  style={rightStyle}
-/>
+/> */}
       </div>
 
       <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-white mb-16 text-center relative z-10">

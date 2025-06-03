@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Montserrat } from "next/font/google";
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +32,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable}  antialiased`}
+        className={`${geistSans.variable}  ${geistMono.variable}  antialiased`}
       >
         {children}
+           {/* Subtle Bottom Blur */}
+       <div
+  className="pointer-events-none fixed bottom-0 left-0 w-full h-40 z-[999] backdrop-blur-xl"
+  style={{
+    WebkitMaskImage: 'linear-gradient(to top, black, transparent)',
+    maskImage: 'linear-gradient(to top, black, transparent)',
+    WebkitMaskRepeat: 'no-repeat',
+    maskRepeat: 'no-repeat',
+  }}
+/>
+
+
+
+
       </body>
     </html>
   );

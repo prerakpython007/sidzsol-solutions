@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.gradient-shadow:hover {
+  box-shadow:
+    0 -4px 8px #B7FBFF,    /* Top glow */
+    4px 0 8px #8F71FF,     /* Right glow */
+    -4px 0 8px #8F71FF,    /* Left glow */
+    0 4px 8px #82ACFF;     /* Bottom glow */
+}
