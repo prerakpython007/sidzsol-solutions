@@ -72,7 +72,7 @@ const ProjectGallery = () => {
   alt="element1"
   width={100}
   height={100}
-  className="absolute left-[2%] sm:left-[6%] top-[75%] w-28 sm:w-44 md:w-52 lg:w-64 opacity-70 rotate-12 transition-transform duration-300 ease-out"
+  className="absolute left-[2%] sm:left-[0%] top-[75%] w-28 sm:w-44 md:w-52 lg:w-64 opacity-70 rotate-12 transition-transform duration-300 ease-out"
   style={leftStyle}
 />
 
@@ -89,7 +89,7 @@ const ProjectGallery = () => {
   alt="element1"
   width={100}
   height={100}
-  className="absolute left-[2%] sm:left-[6%] top-[75%] w-28 sm:w-44 md:w-52 lg:w-64 opacity-70 rotate-12 transition-transform duration-300 ease-out"
+  className="absolute left-[2%] sm:left-[0%] top-[75%] w-28 sm:w-44 md:w-52 lg:w-64 opacity-70 rotate-12 transition-transform duration-300 ease-out"
   style={leftStyle}
 />
 
@@ -190,6 +190,10 @@ const ProjectGallery = () => {
             </div>
           ))}
         </div>
+        
+      </div>
+      <div className='flex justify-end mt-14 mr-20'>
+      <a href="">View More &gt;&gt;</a>
       </div>
     </section>
   );

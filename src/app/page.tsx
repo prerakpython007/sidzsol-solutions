@@ -133,34 +133,34 @@ useEffect(() => {
         
         
 
-        /* Custom cursor */
-        * {
-          cursor: none;
-        }
+        // /* Custom cursor */
+        // * {
+        //   cursor: none;
+        // }
 
         
-        .custom-cursor {
-          position: fixed;
-          width: 20px;
-          height: 20px;
-          background: rgba(255, 255, 255, 0.8);
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 9999;
-          mix-blend-mode: difference;
-          transition: transform 0.1s ease;
-        }
+        // .custom-cursor {
+        //   position: fixed;
+        //   width: 20px;
+        //   height: 20px;
+        //   background: rgba(255, 255, 255, 0.8);
+        //   border-radius: 50%;
+        //   pointer-events: none;
+        //   z-index: 9999;
+        //   mix-blend-mode: difference;
+        //   transition: transform 0.1s ease;
+        // }
         
-        .cursor-trail {
-          position: fixed;
-          width: 8px;
-          height: 8px;
-          background: rgba(255, 107, 53, 0.6);
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 9998;
-          transition: all 0.3s ease;
-        }
+        // .cursor-trail {
+        //   position: fixed;
+        //   width: 8px;
+        //   height: 8px;
+        //   background: rgba(255, 107, 53, 0.6);
+        //   border-radius: 50%;
+        //   pointer-events: none;
+        //   z-index: 9998;
+        //   transition: all 0.3s ease;
+        // }
 
         /* Minimal Loading Styles */
         .loading-container {
@@ -298,10 +298,10 @@ useEffect(() => {
         }
 
         /* Mobile Optimizations */
-        @media (max-width: 768px) {
-          .custom-cursor, .cursor-trail {
-            display: none !important;
-          }
+        // @media (max-width: 768px) {
+        //   .custom-cursor, .cursor-trail {
+        //     display: none !important;
+        //   }
           
           .interactive-element:hover {
             transform: none;
@@ -366,7 +366,7 @@ useEffect(() => {
       <div className="m-0 p-0 font-exo">
         <Navbar/>
         {/* Custom Cursor - Desktop Only */}
-        {!isMobile && (
+        {/* {!isMobile && (
           <>
             <div
               className="custom-cursor"
@@ -383,7 +383,7 @@ useEffect(() => {
               }}
             />
           </>
-        )}
+        )} */}
 
         {/* Minimal Loading Screen */}
         <div
@@ -450,25 +450,10 @@ useEffect(() => {
 
               {/* Enhanced Company Name with Cursor Tracking Effect */}
               <h1 
-                ref={titleRef}
-                className="title-font cursor-tracking-title relative inline-block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem] font-extralight mb-6 sm:mb-8 md:mb-10 tracking-[0.1em] leading-none interactive-element"
-                data-text="SIDZSOL SOLUTIONS"
-                style={{
-                  '--x': `${mousePosition.x}px`,
-                  '--y': `${mousePosition.y}px`
-                } as React.CSSProperties}
-                onMouseMove={(e) => {
-                  if (!isMobile && titleRef.current) {
-                    const rect = titleRef.current.getBoundingClientRect()
-                    const x = ((e.clientX - rect.left) / rect.width) * 100
-                    const y = ((e.clientY - rect.top) / rect.height) * 100
-                    titleRef.current.style.setProperty('--x', `${x}%`)
-                    titleRef.current.style.setProperty('--y', `${y}%`)
-                  }
-                }}
-              >
-                SIDZSOL SOLUTIONS
-              </h1>
+  className="title-font relative inline-block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem] font-extralight mb-6 sm:mb-8 md:mb-10 tracking-[0.1em] leading-none interactive-element"
+>
+  SIDZSOL SOLUTIONS
+</h1>
 
               {/* Enhanced Slogan */}
               <div className="text-sm sm:text-base md:text-lg lg:text-xl font-medium text-blue-300 tracking-[1px] sm:tracking-[2px] uppercase border-2 border-blue-500 py-3 sm:py-4 px-6 sm:px-8 rounded-full inline-block backdrop-blur-sm bg-blue-500/10 transition-all duration-300 hover:bg-blue-500/20 hover:-translate-y-1 cursor-pointer font-exo">
