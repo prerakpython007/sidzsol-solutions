@@ -7,6 +7,7 @@ import About from "./components/About-us"
 import { X } from "lucide-react"
 import Navbar from "./components/Navbar"
 import TestimonialSection from "./components/Testimonials"
+import ProjectGallery from "./components/Projects"
 
 const SimplifiedLanding: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -495,6 +496,7 @@ useEffect(() => {
       
       <About/>
             <TestimonialSection/>
+            <ProjectGallery/>
     </>
   )
 }

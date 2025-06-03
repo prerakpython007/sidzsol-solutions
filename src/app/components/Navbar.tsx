@@ -1,11 +1,20 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image'; // ✅ import Image
+import Image from 'next/image';
 
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,9 +30,9 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-3 sm:py-4">
       <div className="relative w-full h-16 sm:h-20">
-        {/* Center Mode (Scroll Down) */}
+        {/* Center Mode (Scroll Down) - hidden on mobile */}
         <AnimatePresence>
-          {scrollingDown && (
+          {scrollingDown && !isMobile && (
             <motion.div
               key="center"
               initial={{ opacity: 0, y: -20 }}
@@ -36,31 +45,17 @@ const Navbar = () => {
                 layout
                 className="flex items-center gap-4 sm:gap-6 px-4 sm:px-6 sm:py-3 rounded-full backdrop-blur-md bg-white/5 shadow-md"
               >
-                <motion.div
-                  initial={{ x: -50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -50, opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="text-base sm:text-xl font-bold"
-                >
-                  <Image
-                    src="/logo.png"
-                    alt="Logo"
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                    priority
-                  />
-                </motion.div>
-                <motion.div
-                  initial={{ x: 50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: 50, opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="text-sm sm:text-base cursor-pointer text-white hover:text-[#B7FBFF] transition"
-                >
+                <Image
+                  src="/logo.png"
+                  alt="Logo"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                  priority
+                />
+                <div className="text-sm sm:text-base cursor-pointer text-white hover:text-[#B7FBFF] transition">
                   About
-                </motion.div>
+                </div>
               </motion.div>
             </motion.div>
           )}
@@ -75,41 +70,62 @@ const Navbar = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4 }}
-              className="absolute inset-0 flex justify-between items-center flex-wrap gap-y-2"
+              className="absolute inset-0 flex justify-between items-center"
             >
-              <motion.div
-                initial={{ x: -50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -50, opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="text-base sm:text-xl font-bold"
-              >
-                <Image
-                  src="/logo.png"
-                  alt="Logo"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                  priority
-                />
-              </motion.div>
-              <motion.div
-                initial={{ x: 50, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: 50, opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="flex flex-wrap gap-2 sm:gap-4 items-center sm:text-base"
-              >
+              <Image
+                src="/logo.png"
+                alt="Logo"
+                width={40}
+                height={40}
+                className="rounded-full"
+                priority
+              />
+
+              {/* Desktop Nav */}
+              <div className="hidden md:flex gap-4">
                 {['About', 'Services', 'Contact'].map((text) => (
                   <a
                     key={text}
                     href={`#${text.toLowerCase()}`}
-                    className="px-3 sm:px-4 py-1 rounded-full backdrop-blur-xs/5 text-xl bg-white/10 text-white hover:text-black transition-colors duration-300 hover:bg-[#B7FBFF]"
+                    className="px-3 sm:px-4 py-1 rounded-full text-white bg-white/10 hover:bg-[#B7FBFF] hover:text-black transition"
                   >
                     {text}
                   </a>
                 ))}
-              </motion.div>
+              </div>
+
+              {/* Mobile Hamburger */}
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="md:hidden text-white text-3xl"
+                aria-label="Toggle Menu"
+              >
+                {menuOpen ? '✕' : '☰'}
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Mobile Menu Dropdown */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden mt-3 bg-black/80 backdrop-blur-md rounded-lg p-4 absolute right-4 top-[72px] w-44"
+            >
+              {['About', 'Services', 'Contact'].map((text) => (
+                <a
+                  key={text}
+                  href={`#${text.toLowerCase()}`}
+                  className="block text-white text-lg px-2 py-1 rounded hover:bg-[#B7FBFF] hover:text-black transition"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {text}
+                </a>
+              ))}
             </motion.div>
           )}
         </AnimatePresence>
