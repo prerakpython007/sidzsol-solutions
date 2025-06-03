@@ -61,24 +61,32 @@ const softTint = [
   'bg-gradient-to-br from-white/5 via-[#10b981]/5 to-white/5',
 ];
 
-const svgIcons = [
+const SvgIcon1 = () => (
   <svg className="w-10 h-10" viewBox="0 0 100 100" fill="none">
     <circle cx="50" cy="50" r="40" fill="#3b82f6" />
     <circle cx="40" cy="40" r="10" fill="#fff" />
     <circle cx="60" cy="40" r="10" fill="#fff" />
     <path d="M35 65 Q50 80 65 65" stroke="#fff" strokeWidth="5" fill="none" />
-  </svg>,
+  </svg>
+);
+
+const SvgIcon2 = () => (
   <svg className="w-10 h-10" viewBox="0 0 100 100" fill="none">
     <rect x="20" y="20" width="60" height="60" rx="30" fill="#a855f7" />
     <circle cx="50" cy="45" r="8" fill="#fff" />
     <path d="M35 65 Q50 75 65 65" stroke="#fff" strokeWidth="4" fill="none" />
-  </svg>,
+  </svg>
+);
+
+const SvgIcon3 = () => (
   <svg className="w-10 h-10" viewBox="0 0 100 100" fill="none">
     <circle cx="50" cy="50" r="40" fill="#10b981" />
     <circle cx="50" cy="40" r="10" fill="#fff" />
     <path d="M35 65 Q50 75 65 65" stroke="#fff" strokeWidth="4" fill="none" />
-  </svg>,
-];
+  </svg>
+);
+
+const svgIcons = [SvgIcon1, SvgIcon2, SvgIcon3];
 
 const TestimonialScroller = () => {
   return (
@@ -96,7 +104,7 @@ const TestimonialScroller = () => {
       <div className="flex justify-center gap-8 h-[360px] md:h-[500px] relative overflow-hidden flex-col md:flex-row items-center md:items-start">
         {[0, 1, 2].map((colIndex) => (
           <div
-            key={colIndex}
+            key={`col-${colIndex}`}
             className={`w-[320px] animate-infinite-scroll space-y-6 ${
               colIndex === 1 ? 'mt-0' : colIndex === 0 ? 'mt-12' : 'mt-20'
             } ${colIndex > 0 ? 'hidden md:block' : ''}`}
@@ -104,14 +112,16 @@ const TestimonialScroller = () => {
           >
             {duplicated.map((item, idx) => {
               const tint = softTint[(idx + colIndex) % softTint.length];
-              const avatar = svgIcons[(idx + colIndex) % svgIcons.length];
+              const AvatarIcon = svgIcons[(idx + colIndex) % svgIcons.length];
               return (
                 <div
-                  key={`${colIndex}-${idx}`}
+                  key={`testimonial-${colIndex}-${idx}`}
                   className={`p-6 rounded-2xl border border-white/10 shadow-xl backdrop-blur-md transition-transform hover:scale-[1.02] ${tint}`}
                 >
                   <div className="flex items-center mb-4">
-                    <div className="rounded-full overflow-hidden bg-white/10 mr-3">{avatar}</div>
+                    <div className="rounded-full overflow-hidden bg-white/10 mr-3">
+                      <AvatarIcon />
+                    </div>
                     <div>
                       <h3 className="text-lg font-semibold text-white">{item.name}</h3>
                       <p className="text-sm text-gray-400">{item.role}</p>
