@@ -32,3 +32,58 @@ body {
     -4px 0 8px #8F71FF,    /* Left glow */
     0 4px 8px #82ACFF;     /* Bottom glow */
 }
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: inline-block;
+  animation: marquee 20s linear infinite;
+}
+
+
+@keyframes letterFade {
+  0%, 100% {
+    opacity: 0.2;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+}
+
+.animate-letterFade {
+  animation: letterFade 1.5s ease-in-out infinite;
+}
+
+@keyframes rotateSlow {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.animate-rotateSlow {
+  animation: rotateSlow 40s linear infinite;
+}
+
+
+.grainy-texture {
+  background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+  opacity: 0.06;
+  mix-blend-mode: soft-light;
+  background-repeat: repeat;
+  background-size: 300px 300px;
+}

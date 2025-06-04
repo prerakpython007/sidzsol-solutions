@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { LucideArrowUpRight } from "lucide-react";
+import { playwriteHU } from '@/lib/fonts';
 
 const Navbar = () => {
   const [scrollingDown, setScrollingDown] = useState(false);
@@ -46,16 +47,9 @@ const Navbar = () => {
                 layout
                 className="flex items-center gap-4 sm:gap-6 px-4 sm:px-6 sm:py-3 rounded-full backdrop-blur-sm bg-white/5 shadow-md"
               >
-                <Image
-                  src="/logo.png"
-                  alt="Logo"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                  priority
-                />
-                <div className="text-sm sm:text-base cursor-pointer bg-[#B7FBFF] gap-3 py-3 flex rounded-full px-3 group   text-black border-[1px] duration-300 hover:text-white  hover:border-white hover:bg-[#8F71FF] border-[#B7FBFF] hover:shadow-[#B7FBFF] hover:shadow-sm/50 transition">
-                  About <LucideArrowUpRight className="bg-[#8F71FF] text-white group-hover:bg-white group-hover:text-[#8F71FF] rounded-full"/>
+                 <h1 className={`${playwriteHU.className}`}>Sidzsol</h1>
+                <div className="text-sm sm:text-base cursor-pointer bg-[#B7FBFF] gap-3 py-3 font-bold flex rounded-full px-3 group   text-black border-[1px] duration-300 hover:text-white  hover:border-white hover:bg-[#8F71FF] border-[#B7FBFF] hover:shadow-[#B7FBFF] hover:shadow-sm/50 transition">
+                  About <LucideArrowUpRight className="bg-[#8F71FF]  text-white group-hover:bg-white group-hover:text-[#8F71FF] rounded-full"/>
                 </div>
               </motion.div>
             </motion.div>

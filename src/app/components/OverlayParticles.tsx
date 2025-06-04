@@ -65,7 +65,7 @@ const OverlayParticles = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full -z-10"
+      className="absolute inset-0 w-full bg-black h-full -z-10"
     />
   );
 };

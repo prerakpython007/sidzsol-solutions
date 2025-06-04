@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Montserrat } from "next/font/google";
+import Footer from "./components/Footer";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -32,10 +33,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable}  ${geistMono.variable}  antialiased`}
+        className={`${geistSans.variable}  ${geistMono.variable} scroll-smooth antialiased`}
       >
         {children}
            {/* Subtle Bottom Blur */}
+           <Footer/>
        <div
   className="pointer-events-none fixed bottom-0 left-0 w-full h-40 z-[999] backdrop-blur-xl"
   style={{
