@@ -102,22 +102,31 @@ const SimplifiedLanding: React.FC = () => {
           <div className="mt-3 text-white/60 text-sm tracking-wide">{Math.round(loadingProgress)}%</div>
         </div>
 
-        {/* Hero section with video background */}
+        {/* Hero section with video or image background */}
         <div className="relative h-screen overflow-hidden">
           <div className="absolute inset-0 z-[-10]" ref={parallaxRef}>
-            <video
-              ref={videoRef}
-              className="w-full h-full object-cover will-change-transform"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              style={{ filter: isMobile ? "brightness(0.6)" : "brightness(0.7) contrast(1.05)" }}
-            >
-              <source src="/bg2.mp4" type="video/mp4" />
-              <source src="/bg.webm" type="video/webm" />
-            </video>
+            {!isMobile ? (
+              <video
+                ref={videoRef}
+                className="w-full h-full object-cover will-change-transform"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                style={{ filter: "brightness(0.7) contrast(1.05)" }}
+              >
+                <source src="/bg2.mp4" type="video/mp4" />
+                <source src="/bg.webm" type="video/webm" />
+              </video>
+            ) : (
+              <img
+                src="/bg-fallback.jpg"
+                alt="Background"
+                className="w-full h-full object-cover"
+                style={{ filter: "brightness(0.6)" }}
+              />
+            )}
           </div>
 
           <div className={`relative w-full h-full flex flex-col justify-center items-center text-white transition-all duration-1000 ease-in ${showLanding ? "opacity-100 scale-100" : "opacity-0 scale-105"}`}>
