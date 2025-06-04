@@ -34,15 +34,23 @@ const contentSets = [
 
 const About = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [videoSrc, setVideoSrc] = useState('');
+  const [showVideo, setShowVideo] = useState(false);
+
   const floatingRef1 = useRef<HTMLDivElement>(null);
   const floatingRef2 = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    setVideoSrc(isMobile ? '/bg3-mobile.mp4' : '/bg3.mp4');
+    setTimeout(() => setShowVideo(true), 300); // defer video loading
+  }, [isMobile]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -62,22 +70,23 @@ const About = () => {
     <div className="relative w-full overflow-hidden">
       {/* Hero Section */}
       <section className="relative min-h-screen bg-[#010003] flex items-center justify-center overflow-hidden z-10">
-        <OverlayParticles />
+        {!isMobile && <OverlayParticles />}
 
         {/* Background video */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          <video
-            className="w-full h-full object-cover md:w-[200%]"
-            style={{ transform: isMobile ? 'translateX(0)' : 'translateX(50%)' }}
-            autoPlay
-            loop
-            muted
-            playsInline
-          >
-            <source src="/bg3.mp4" type="video/mp4" />
-          </video>
-          {/* <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" /> */}
-        </div>
+        {showVideo && (
+          <div className="absolute inset-0 z-0 overflow-hidden">
+            <video
+              className="w-full h-full object-cover will-change-transform motion-reduce:opacity-0"
+              style={{ transform: isMobile ? 'translateX(0)' : 'translateX(50%)' }}
+              autoPlay
+              loop
+              muted
+              playsInline
+            >
+              <source src={videoSrc} type="video/mp4" />
+            </video>
+          </div>
+        )}
 
         {/* Cards Grid */}
         <div className="relative z-10 container mx-auto px-4 sm:px-6 md:px-8 py-20">
@@ -85,7 +94,7 @@ const About = () => {
             {contentSets.map((item, idx) => (
               <div
                 key={idx}
-                className="relative bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-2xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-xl transform-gpu transition-transform duration-300 hover:scale-[1.04] hover:rotate-[0.4deg]"
+                className="relative bg-gradient-to-br from-white/5 to-white/10 border border-white/10 rounded-2xl p-6 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-lg transform-gpu transition-transform duration-300 hover:scale-[1.04] hover:rotate-[0.4deg]"
               >
                 <h2 className={`${playwriteHU.className} text-xl sm:text-2xl font-semibold text-white mb-3`}>
                   {item.heading}
@@ -97,7 +106,6 @@ const About = () => {
                   {item.buttonText}
                 </button>
 
-                {/* Floating elements */}
                 {idx === 1 && (
                   <div
                     ref={floatingRef1}
@@ -122,7 +130,7 @@ const About = () => {
 
       {/* Overlay Section */}
       <section className="relative w-full bg-black text-white z-20">
-        <OverlayParticles />
+        {!isMobile && <OverlayParticles />}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-16 space-y-12">
           <h2 className="text-sm font-thin text-left mb-4">—— About Sidzsol Solutions</h2>
           <p className={`${playwriteHU.className} text-2xl sm:text-3xl leading-10 text-left text-gray-300`}>
