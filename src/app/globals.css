@@ -87,3 +87,47 @@ body {
   background-repeat: repeat;
   background-size: 300px 300px;
 }
+
+
+@keyframes futuristicPattern {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100px 100px;
+  }
+}
+
+.futuristic-pattern {
+  background-image: radial-gradient(circle, rgba(0, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: futuristicPattern 3s linear infinite;
+}
+
+
+@keyframes core-pulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes particle-pulse {
+  0% { transform: rotate(var(--rotation)) translateY(-20px) scale(1); opacity: 1; }
+  50% { transform: rotate(var(--rotation)) translateY(-30px) scale(1.5); opacity: 0.5; }
+  100% { transform: rotate(var(--rotation)) translateY(-20px) scale(1); opacity: 1; }
+}
+
+.animate-core-pulse {
+  animation: core-pulse 2s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
+}
+
+.animate-reverse-spin {
+  animation: spin 12s linear infinite reverse;
+}
+
+html {
+  scroll-behavior: smooth;
+}

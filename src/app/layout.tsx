@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 import { Montserrat } from "next/font/google";
+import "./globals.css";
 import Footer from "./components/Footer";
 
 const montserrat = Montserrat({
@@ -31,26 +31,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable}  ${geistMono.variable} scroll-smooth antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{
+          scrollBehavior: "smooth", // fallback for browsers that don’t honor Tailwind’s scroll-smooth
+        }}
       >
         {children}
-           {/* Subtle Bottom Blur */}
-           <Footer/>
-       <div
-  className="pointer-events-none fixed bottom-0 left-0 w-full h-40 z-[999] backdrop-blur-xl"
-  style={{
-    WebkitMaskImage: 'linear-gradient(to top, black, transparent)',
-    maskImage: 'linear-gradient(to top, black, transparent)',
-    WebkitMaskRepeat: 'no-repeat',
-    maskRepeat: 'no-repeat',
-  }}
-/>
 
-
-
-
+        {/* Subtle Bottom Blur */}
+        <Footer />
+        <div
+          className="pointer-events-none fixed bottom-0 left-0 w-full h-40 z-[999] backdrop-blur-xl"
+          style={{
+            WebkitMaskImage: "linear-gradient(to top, black, transparent)",
+            maskImage: "linear-gradient(to top, black, transparent)",
+            WebkitMaskRepeat: "no-repeat",
+            maskRepeat: "no-repeat",
+          }}
+        />
       </body>
     </html>
   );
