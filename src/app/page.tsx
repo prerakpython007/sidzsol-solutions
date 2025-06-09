@@ -10,6 +10,7 @@ import TestimonialSection from "./components/Testimonials";
 import ProjectGallery from "./components/Projects";
 // import Contact from "./components/Contact";
 import { Space_Grotesk } from "next/font/google";
+import Blogs from "./components/Blogs";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -367,6 +368,7 @@ const SimplifiedLanding: React.FC = () => {
 
         {/* Other sections */}
         <About />
+        <Blogs/>
         <TestimonialSection />
         <ProjectGallery />
         {/* <Contact /> */}

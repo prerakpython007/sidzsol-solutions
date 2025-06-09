@@ -7,14 +7,17 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'float-delay': 'float 8s ease-in-out 2s infinite',
+        'slow-spin': 'spin 15s linear infinite',
+        'reverse-slow-spin': 'reverse-spin 12s linear infinite',
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-          '50%': { transform: 'translateY(-20px) rotate(5deg)' },
+        'reverse-spin': {
+          from: { transform: 'rotate(360deg)' },
+          to: { transform: 'rotate(0deg)' },
         },
+      },
+      maxWidth: {
+        '8xl': '88rem',
       },
     },
   },

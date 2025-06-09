@@ -1,118 +1,126 @@
 'use client';
 
-import React from 'react';
-import Image from 'next/image';
-import {
-  Instagram,
-  Twitter,
-  Linkedin,
-  Github,
-} from 'lucide-react';
+import { Space_Grotesk } from 'next/font/google';
+import { motion } from 'framer-motion';
+import { Twitter, Github, Linkedin, Mail, ArrowUpRight } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import OverlayParticles from './OverlayParticles';
-import { motion, useScroll, useTransform } from 'framer-motion';
+
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'] });
+const FooterShapes = dynamic(() => import('./FooterShapes'), { ssr: false });
+
+const randomRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
 const Footer = () => {
-  const { scrollY } = useScroll();
-  const parallaxYLeft = useTransform(scrollY, [0, 500], [0, -30]);
-  const parallaxYRight = useTransform(scrollY, [0, 500], [0, -30]);
-
   return (
-    <footer className="relative bg-black text-white pt-32 pb-24 px-4 sm:px-8 overflow-hidden z-10">
-      {/* Background overlays */}
-      <div className="absolute inset-0 z-0 pointer-events-none grainy-texture" />
-      <div className="absolute bottom-[-100px] left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-radial from-[#82ACFF]/25 via-[#8F71FF]/10 to-transparent blur-[120px] pointer-events-none z-0" />
-
-      {/* Outside Floating Image Left */}
-      <motion.div
-        style={{ y: parallaxYLeft }}
-        className="absolute left-[5%] sm:left-40 md:left-96 top-[500px] -translate-y-1/2 w-[100px] sm:w-[120px] md:w-[160px] pointer-events-none z-50"
+    <div className="relative w-full min-h-[90vh] flex items-end justify-center p-8 bg-black">
+      <div 
+        className="relative w-[95%] max-w-[1400px] backdrop-blur-xl rounded-t-[4rem] translate-y-24 overflow-hidden animate-glow"
+        style={{
+          background: 'rgba(0, 0, 0, 0.9)',
+          animation: 'borderGlow 8s ease-in-out infinite'
+        }}
       >
-        <Image
-          src="/footer-element1.png"
-          alt="Floating Left Outside"
-          width={160}
-          height={160}
-        />
-      </motion.div>
+        <style jsx>{`
+          @keyframes borderGlow {
+            0%, 100% {
+              box-shadow: 
+                0 -60px 100px -20px rgba(213, 253, 255, 0.4),
+                0 -30px 50px -10px rgba(157, 229, 255, 0.3),
+                -40px -20px 90px -20px rgba(172, 168, 255, 0.35),
+                40px -20px 90px -20px rgba(172, 115, 255, 0.35);
+            }
+            25% {
+              box-shadow: 
+                40px -50px 90px -20px rgba(213, 253, 255, 0.5),
+                20px -40px 60px -15px rgba(157, 229, 255, 0.4),
+                0px -30px 80px -25px rgba(172, 168, 255, 0.45),
+                -20px -20px 70px -25px rgba(172, 115, 255, 0.4);
+            }
+            50% {
+              box-shadow: 
+                0 -70px 120px -25px rgba(213, 253, 255, 0.6),
+                0 -40px 70px -20px rgba(157, 229, 255, 0.5),
+                -50px -35px 110px -30px rgba(172, 168, 255, 0.55),
+                50px -35px 110px -30px rgba(172, 115, 255, 0.55);
+            }
+            75% {
+              box-shadow: 
+                -40px -50px 90px -20px rgba(213, 253, 255, 0.5),
+                -20px -40px 60px -15px rgba(157, 229, 255, 0.4),
+                0px -30px 80px -25px rgba(172, 168, 255, 0.45),
+                20px -20px 70px -25px rgba(172, 115, 255, 0.4);
+            }
+          }
+        `}</style>
 
-      {/* Outside Floating Image Right */}
-      <motion.div
-        style={{ y: parallaxYRight }}
-        className="absolute  sm:right-40 md:right-96  -translate-y-1/2 w-[100px] sm:w-[120px] md:w-[160px] pointer-events-none z-50"
-      >
-        <Image
-          src="/footer-element2.png"
-          alt="Floating Right Outside"
-          width={160}
-          height={160}
-        />
-      </motion.div>
+        <div className="absolute inset-0 border-t border-l border-r border-white/10 rounded-t-[4rem]" />
+        
+        <div className="relative px-8 py-16 space-y-20">
+          <OverlayParticles/>
+          {/* Logo & Company Name */}
+          <div className="absolute top-8 left-8">
+            <h3 className="text-xl font-medium bg-gradient-to-r from-[#D5FDFF] to-[#AC73FF] bg-clip-text text-transparent">
+              SIDZSOL Solutions
+            </h3>
+          </div>
 
-      {/* Frosted glass card */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-8 py-12 sm:py-16 rounded-3xl bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_0_16px_#ffffff]/30 overflow-hidden">
-
-        {/* Inside Floating Elements */}
-        <Image
-          src="/footer-element2.png"
-          alt="Floating Right Inside"
-          width={160}
-          height={160}
-          className="absolute right-5 sm:right-10 top-80 blur-sm opacity-30 -translate-y-1/2 w-[100px] sm:w-[160px] pointer-events-none z-[1]"
-        />
-        <Image
-          src="/footer-element1.png"
-          alt="Floating Left Inside"
-          width={160}
-          height={160}
-          className="absolute left-5 sm:left-10 top-0 blur-sm opacity-30 -translate-y-1/2 w-[100px] sm:w-[160px] pointer-events-none z-[1]"
-        />
-
-        <OverlayParticles />
-
-        {/* Diagonal Lines */}
-     
-
-        {/* Main Content */}
-        <div className="relative z-10 flex flex-col sm:flex-row justify-between items-center gap-12 sm:gap-0 text-center sm:text-left">
-          {/* Branding */}
-          <div className="w-full sm:w-auto">
-            <h2 className="text-4xl font-bold text-[#B7FBFF] drop-shadow-[0_0_5px_#82ACFF]">
-              SIDZSOL
+          {/* Central Content */}
+          <div className="text-center space-y-12 pt-12">
+            <h2 className={`${spaceGrotesk.className} text-6xl md:text-7xl font-bold text-white tracking-tight`}>
+              LET'S TALK
             </h2>
-            <p className="text-gray-400 mt-2 max-w-xs mx-auto sm:mx-0">
-              Empowering brands with futuristic digital solutions. Let’s create magic.
-            </p>
-          </div>
+            
+            {/* Two Column Links */}
+            <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto text-lg">
+              <div className="space-y-6">
+                <h4 className="font-medium text-[#9DE5FF]">Services</h4>
+                <ul className="space-y-4">
+                  {['Web Development', 'Mobile Apps', 'Cloud Solutions'].map((item, i) => (
+                    <li key={i}>
+                      <a href="#" className="text-white/70 hover:text-white flex items-center gap-2 group">
+                        {item}
+                        <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="space-y-6">
+                <h4 className="font-medium text-[#ACA8FF]">Company</h4>
+                <ul className="space-y-4">
+                  {['About Us', 'Careers', 'Contact'].map((item, i) => (
+                    <li key={i}>
+                      <a href="#" className="text-white/70 hover:text-white flex items-center gap-2 group">
+                        {item}
+                        <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-xl font-semibold text-[#82ACFF] mb-3">Quick Links</h3>
-            <ul className="space-y-2 text-sm text-gray-300">
-              <li><a href="#about" className="hover:text-white transition">About</a></li>
-              <li><a href="#services" className="hover:text-white transition">Services</a></li>
-              <li><a href="#contact" className="hover:text-white transition">Contact</a></li>
-              <li><a href="#form" className="hover:text-white transition">Get a Quote</a></li>
-            </ul>
-          </div>
-
-          {/* Social Icons */}
-          <div>
-            <h3 className="text-xl font-semibold text-[#82ACFF] mb-3">Connect with us</h3>
-            <div className="flex justify-center sm:justify-end gap-5 text-white">
-              <a href="#" className="hover:text-[#B7FBFF] transition"><Instagram size={24} /></a>
-              <a href="#" className="hover:text-[#B7FBFF] transition"><Twitter size={24} /></a>
-              <a href="#" className="hover:text-[#B7FBFF] transition"><Linkedin size={24} /></a>
-              <a href="#" className="hover:text-[#B7FBFF] transition"><Github size={24} /></a>
+            {/* Social Icons */}
+            <div className="pt-8 flex justify-center gap-6">
+              {[Twitter, Github, Linkedin, Mail].map((Icon, i) => (
+                <motion.a
+                  key={i}
+                  href="#"
+                  whileHover={{ scale: 1.1 }}
+                  className="relative p-3 rounded-full bg-black/20 border border-white/10 hover:border-white/20 transition-all duration-300 group"
+                >
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#D5FDFF]/0 via-[#9DE5FF]/0 to-[#AC73FF]/0 group-hover:from-[#D5FDFF]/20 group-hover:via-[#9DE5FF]/20 group-hover:to-[#AC73FF]/20 blur-md transition-all duration-300" />
+                  <Icon className="w-6 h-6 text-white/70 relative z-10 group-hover:text-white group-hover:drop-shadow-[0_0_8px_rgba(213,253,255,0.5)] transition-all duration-300" />
+                </motion.a>
+              ))}
             </div>
           </div>
         </div>
-
-        {/* Copyright */}
-        <div className="border-t border-white/10 mt-10 pt-6 text-center text-sm text-gray-500">
-          © {new Date().getFullYear()} SIDZSOL. All rights reserved.
-        </div>
       </div>
-    </footer>
+
+      <FooterShapes />
+    </div>
   );
 };
 
