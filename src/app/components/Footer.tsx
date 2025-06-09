@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ArrowUpRight, Mail, MapPin, Phone, X } from 'lucide-react';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 
 const TorchText = () => {
   const textRef = useRef<HTMLDivElement>(null);
@@ -31,6 +31,9 @@ const TorchText = () => {
 
   return (
     <div ref={textRef} className="absolute top-0 w-full overflow-hidden select-none">
+      {/* Base border */}
+      <div className="absolute inset-0 border border-white/5" />
+
       {/* Base dark text */}
       <h1 className="text-[25vw] font-bold whitespace-nowrap translate-x-[15%] relative">
         <span className="text-white/5">SIDZSOL</span>
@@ -43,6 +46,12 @@ const TorchText = () => {
 
       {/* Glowing text and border */}
       <div className="absolute inset-0" style={maskStyle}>
+        {/* Glowing border */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 border-2 border-[#C68EFD] blur-[2px]" />
+          <div className="absolute inset-0 border border-[#C68EFD] [box-shadow:0_0_30px_#C68EFD]" />
+        </div>
+
         <h1 className="text-[25vw] font-bold whitespace-nowrap translate-x-[15%] relative">
           {/* Glowing text */}
           <span className="bg-gradient-to-r from-[#8F87F1] via-[#C68EFD] to-[#E9A5F1] 
@@ -81,9 +90,9 @@ const BorderGlow = () => {
   }, []);
 
   return (
-    <div className="absolute inset-0" ref={borderRef}>
+    <div className="fixed top-0 left-0 right-0 h-screen" ref={borderRef}>
       {/* Base border */}
-      <div className="absolute inset-[1px] border border-white/5" />
+      <div className="absolute inset-0 border-x border-white/5" />
       
       {/* Glow border */}
       <div
@@ -93,8 +102,8 @@ const BorderGlow = () => {
           WebkitMaskImage: `radial-gradient(circle 150px at ${mousePos.x}px ${mousePos.y}px, white 20%, transparent 70%)`
         }}
       >
-        <div className="absolute inset-[1px] border-2 border-[#C68EFD] blur-[2px]" />
-        <div className="absolute inset-[1px] border border-[#C68EFD] [box-shadow:0_0_30px_#C68EFD]" />
+        <div className="absolute inset-0 border-x-2 border-[#C68EFD] blur-[2px]" />
+        <div className="absolute inset-0 border-x border-[#C68EFD] [box-shadow:0_0_30px_#C68EFD]" />
       </div>
     </div>
   );
@@ -138,10 +147,38 @@ const AnimatedLink = ({ text }: { text: string }) => (
   </motion.li>
 );
 
+const KonamiCode = () => {
+  const [sequence, setSequence] = useState<string[]>([]);
+  const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const newSequence = [...sequence, e.key];
+      if (newSequence.length > konamiCode.length) {
+        newSequence.shift();
+      }
+      setSequence(newSequence);
+
+      if (newSequence.join('') === konamiCode.join('')) {
+        document.documentElement.style.filter = 'hue-rotate(180deg)';
+        setTimeout(() => {
+          document.documentElement.style.filter = 'none';
+        }, 1000);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [sequence]);
+
+  return null;
+};
+
 const TorchRevealCard = ({ text }: { text: string }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
+  const [clicks, setClicks] = useState(0);
+  
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const rect = cardRef.current?.getBoundingClientRect();
@@ -162,13 +199,31 @@ const TorchRevealCard = ({ text }: { text: string }) => {
     WebkitMaskImage: `radial-gradient(circle 100px at ${mousePos.x}px ${mousePos.y}px, white, transparent)`
   };
 
+  const handleClick = useCallback(() => {
+    setClicks(prev => {
+      if (prev === 2) {
+        // Easter egg message appears in console
+        console.log('%c🎮 Game Mode Activated! 🎮', 'color: #C68EFD; font-size: 20px;');
+      }
+      return prev + 1;
+    });
+  }, []);
+
   return (
-    <div ref={cardRef} className="relative h-20 bg-black overflow-hidden rounded-sm border border-white/10">
+    <div ref={cardRef} onClick={handleClick} className="relative h-20 bg-black overflow-hidden rounded-sm cursor-pointer">
+      {/* Base border */}
+      <div className="absolute inset-0 border border-white/5" />
+      
       {/* Hidden content until revealed */}
       <div className="absolute inset-0 bg-black" />
       
       {/* Torch reveal layer */}
       <div className="absolute inset-0" style={maskStyle}>
+        {/* Glowing border */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 border-2 border-[#C68EFD] blur-[2px]" />
+          <div className="absolute inset-0 border border-[#C68EFD] [box-shadow:0_0_30px_#C68EFD]" />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#8F87F1]/10 via-[#C68EFD]/10 to-[#E9A5F1]/10" />
         <div className="absolute inset-0 flex items-center p-6">
           <p className="text-sm font-medium text-white/90">{text}</p>
@@ -178,9 +233,106 @@ const TorchRevealCard = ({ text }: { text: string }) => {
   );
 };
 
+const GridBackground = () => {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const gridCards = useMemo(() => [
+    // Row 1
+    { text: "Next.js", x: 1, y: 3 },
+    { text: "React", x: 3, y: 3 },
+    { text: "TypeScript", x: 5, y: 3 },
+    { text: "Prisma", x: 7, y: 3 },
+    // Row 2
+    { text: "TailwindCSS", x: 1, y: 4 },
+    { text: "Node.js", x: 3, y: 4 },
+    { text: "GraphQL", x: 5, y: 4 },
+    { text: "tRPC", x: 7, y: 4 },
+    // Row 3
+    { text: "MongoDB", x: 1, y: 5 },
+    { text: "PostgreSQL", x: 3, y: 5 },
+    { text: "AWS", x: 5, y: 5 },
+    { text: "Docker", x: 7, y: 5 }
+  ], []);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = gridRef.current?.getBoundingClientRect();
+      if (rect) {
+        setMousePos({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top,
+        });
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const maskStyle = {
+    maskImage: `radial-gradient(circle 150px at ${mousePos.x}px ${mousePos.y}px, white, transparent)`,
+    WebkitMaskImage: `radial-gradient(circle 150px at ${mousePos.x}px ${mousePos.y}px, white, transparent)`
+  };
+
+  return (
+    <div ref={gridRef} className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 bg-black" />
+      
+      <div className="absolute inset-0" style={maskStyle}>
+        <div className="absolute inset-0 
+          [background-size:200px_200px]
+          [background-image:linear-gradient(to_right,rgba(198,142,253,0.2)_1px,transparent_1px),linear-gradient(to_bottom,rgba(198,142,253,0.2)_1px,transparent_1px)]
+          [box-shadow:0_0_30px_rgba(198,142,253,0.3)]">
+          {gridCards.map((card, i) => (
+            <div
+              key={i}
+              className="absolute bg-black/50 backdrop-blur-sm border border-[#C68EFD]/20 rounded-sm p-2"
+              style={{
+                left: `${card.x * 200}px`,
+                top: `${card.y * 200}px`,
+                width: '150px',
+                opacity: 0.7
+              }}
+            >
+              <p className="text-[#C68EFD]/70 text-sm font-light">{card.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Footer() {
+  const [cornerClicks, setCornerClicks] = useState(0);
+  
+  const handleCornerClick = useCallback(() => {
+    setCornerClicks(prev => {
+      if (prev === 3) {
+        // Easter egg: Add pixel art to the corner
+        const art = `
+        ⠀⠀⠀⣀⣤⣤⣤⣤⣤⣤⣄⣀⡀⠀⠀⠀
+        ⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀
+        ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆
+        ⢸⣿⣿⣿⣿⠟⠋⠉⠉⠛⠻⣿⣿⣿⣿⡇
+        ⢸⣿⣿⡟⠁⠀⠀⠀⠀⠀⠀⠈⢻⣿⣿⡇
+        ⢸⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⡇
+        ⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇
+        ⢸⣿⠀⠀⠀⢻⣿⣿⣿⣿⣦⠀⠀⠀⣿⡇
+        ⢸⣿⠀⠀⠀⠘⠿⠿⠿⠿⠋⠀⠀⠀⣿⡇
+        ⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇
+        ⠈⠻⢷⣦⣤⣤⣤⣤⣤⣤⣤⣴⡶⠟⠋`;
+        console.log('%c' + art, 'color: #C68EFD; font-size: 10px');
+      }
+      return prev + 1;
+    });
+  }, []);
+
   return (
     <footer className="relative w-full bg-black text-white overflow-hidden min-h-[800px]">
+      <KonamiCode />
+      {/* Add GridBackground before other components */}
+      <GridBackground />
       {/* Reveal Cards */}
       <div className="relative z-20 container mx-auto px-12 pt-8">
         <div className="grid grid-cols-3 gap-4">
@@ -195,12 +347,12 @@ export default function Footer() {
       
       {/* Upper Corner X Symbols */}
       <div className="absolute top-0 left-0 p-8">
-        <X className="w-8 h-8 text-white/30" />
+        <X className="w-8 h-8 text-white/30 cursor-pointer hover:text-[#C68EFD] transition-colors" onClick={handleCornerClick} />
       </div>
       <div className="absolute top-0 right-0 p-8">
-        <X className="w-8 h-8 text-white/30" />
+        <X className="w-8 h-8 text-white/30 cursor-pointer hover:text-[#C68EFD] transition-colors" onClick={handleCornerClick} />
       </div>
-
+      
       {/* Background Elements */}
       <TorchText />
 
