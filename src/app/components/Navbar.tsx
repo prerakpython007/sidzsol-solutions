@@ -4,8 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { LucideArrowUpRight } from "lucide-react";
 import { playwriteHU } from '@/lib/fonts';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
+  const router = useRouter();
   const [scrollingDown, setScrollingDown] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,6 +31,11 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  const handleAboutClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push('/Pages/AboutPage');
+  };
+
   return (
     <nav className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 py-3 sm:py-4">
       <div className="relative w-full h-16 sm:h-20">
@@ -47,9 +54,9 @@ const Navbar = () => {
                 layout
                 className="flex items-center gap-4 sm:gap-6 px-4 sm:px-6 sm:py-3 rounded-full backdrop-blur-sm bg-white/5 shadow-md"
               >
-                 <h1 className={`${playwriteHU.className}`}>Sidzsol</h1>
-                <div className="text-sm sm:text-base cursor-pointer bg-[#B7FBFF] gap-3 py-3 font-bold flex rounded-full px-3 group   text-black border-[1px] duration-300 hover:text-white  hover:border-white hover:bg-[#8F71FF] border-[#B7FBFF] hover:shadow-[#B7FBFF] hover:shadow-sm/50 transition">
-                  About <LucideArrowUpRight className="bg-[#8F71FF]  text-white group-hover:bg-white group-hover:text-[#8F71FF] rounded-full"/>
+                <h1 className={`${playwriteHU.className}`}>Sidzsol</h1>
+                <div onClick={handleAboutClick} className="text-sm sm:text-base cursor-pointer bg-[#B7FBFF] gap-3 py-3 font-bolda flex rounded-full px-3 group text-black border-[1px] duration-300 hover:text-white hover:border-white hover:bg-[#8F71FF] border-[#B7FBFF] hover:shadow-[#B7FBFF] hover:shadow-sm/50 transition">
+                  About <LucideArrowUpRight className="bg-[#8F71FF] text-white group-hover:bg-white group-hover:text-[#8F71FF] rounded-full"/>
                 </div>
               </motion.div>
             </motion.div>
@@ -81,7 +88,8 @@ const Navbar = () => {
                 {["About", "Services", "Contact"].map((text) => (
                   <a
                     key={text}
-                    href={`#${text.toLowerCase()}`}
+                    href={text.toLowerCase() === 'about' ? '/about' : `#${text.toLowerCase()}`}
+                    onClick={text.toLowerCase() === 'about' ? handleAboutClick : undefined}
                     className="px-3 sm:px-4 py-1 rounded-full text-white bg-white/10 hover:bg-[#B7FBFF] hover:text-black transition"
                   >
                     {text}
@@ -114,9 +122,14 @@ const Navbar = () => {
               {["About", "Services", "Contact"].map((text) => (
                 <a
                   key={text}
-                  href={`#${text.toLowerCase()}`}
+                  href={text.toLowerCase() === 'about' ? '/about' : `#${text.toLowerCase()}`}
+                  onClick={(e) => {
+                    if (text.toLowerCase() === 'about') {
+                      handleAboutClick(e);
+                    }
+                    setMenuOpen(false);
+                  }}
                   className="block text-white text-lg px-2 py-1 rounded hover:bg-[#B7FBFF] hover:text-black transition"
-                  onClick={() => setMenuOpen(false)}
                 >
                   {text}
                 </a>

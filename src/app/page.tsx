@@ -237,7 +237,7 @@ const SimplifiedLanding: React.FC = () => {
       `}</style>
 
       <div className={`font-exo ${spaceGrotesk.className}`}>
-        <Navbar />
+        
 
         {/* Enhanced Scroll Indicator */}
         <div className="fixed left-8 top-1/2 -translate-y-1/2 z-50 h-64 flex items-center">
